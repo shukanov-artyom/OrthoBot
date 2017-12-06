@@ -1,5 +1,5 @@
 #r "Newtonsoft.Json"
-#load "EchoDialog.csx"
+#load "RootDialog.csx"
 
 using System;
 using System.Net;
@@ -24,11 +24,8 @@ using Microsoft.Bot.Connector;
 public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"Webhook was triggered!");
-
-    // Initialize the azure bot
     using (BotService.Initialize())
     {
-        // Deserialize the incoming activity
         string jsonContent = await req.Content.ReadAsStringAsync();
         var activity = JsonConvert.DeserializeObject<Activity>(jsonContent);
         
@@ -45,7 +42,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             switch (activity.GetActivityType())
             {
                 case ActivityTypes.Message:
-                    await Conversation.SendAsync(activity, () => new EchoDialog());
+                    await Conversation.SendAsync(activity, () => new RootDialog());
                     break;
                 case ActivityTypes.ConversationUpdate:
                     var client = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -53,7 +50,8 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
                     if (update.MembersAdded.Any())
                     {
                         var reply = activity.CreateReply();
-                        var newMembers = update.MembersAdded?.Where(t => t.Id != activity.Recipient.Id);
+                        var newMembers = update.MembersAdded
+                            ?.Where(t => t.Id != activity.Recipient.Id);
                         foreach (var newMember in newMembers)
                         {
                             reply.Text = "Welcome";
@@ -76,5 +74,5 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
             }
         }
         return req.CreateResponse(HttpStatusCode.Accepted);
-    }    
+    }
 }

@@ -5,7 +5,7 @@ using Microsoft.Bot.Connector;
 
 // For more information about this template visit http://aka.ms/azurebots-csharp-basic
 [Serializable]
-public class EchoDialog : IDialog<object>
+public class RootDialog : IDialog<object>
 {
     protected int count = 1;
 
@@ -23,11 +23,12 @@ public class EchoDialog : IDialog<object>
         {
             return Task.FromException(error);
         }
-
         return Task.CompletedTask;
     }
 
-    public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
+    public virtual async Task MessageReceivedAsync(
+        IDialogContext context,
+        IAwaitable<IMessageActivity> argument)
     {
         var message = await argument;
         if (message.Text == "reset")
@@ -46,7 +47,9 @@ public class EchoDialog : IDialog<object>
         }
     }
 
-    public async Task AfterResetAsync(IDialogContext context, IAwaitable<bool> argument)
+    public async Task AfterResetAsync(
+        IDialogContext context,
+        IAwaitable<bool> argument)
     {
         var confirm = await argument;
         if (confirm)
