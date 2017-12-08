@@ -1,4 +1,6 @@
 #r "Newtonsoft.Json"
+#load "InfoDialog.csx"
+#load "BotAction.csx"
 #load "RootDialog.csx"
 
 using System;

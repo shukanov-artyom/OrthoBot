@@ -1,6 +1,3 @@
-#load "InfoDialog.csx"
-#load "BotAction.csx"
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
