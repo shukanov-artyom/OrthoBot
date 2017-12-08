@@ -1,9 +1,16 @@
+#load "InfoDialog.csx"
+#load "BotAction.csx"
+
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Builder.FormFlow;
+using MultiDialogsBot.Domain;
+using MultiDialogsBot.Domain.Content;
 
-// For more information about this template visit http://aka.ms/azurebots-csharp-basic
 [Serializable]
 public class RootDialog : IDialog<object>
 {
@@ -30,37 +37,85 @@ public class RootDialog : IDialog<object>
         IDialogContext context,
         IAwaitable<IMessageActivity> argument)
     {
-        var message = await argument;
-        if (message.Text == "reset")
+        var message = await result;
+        string messageLower = message.Text.ToLower();
+        if (messageLower.Contains("test"))
         {
-            PromptDialog.Confirm(
-                context,
-                AfterResetAsync,
-                "Are you sure you want to reset the count?",
-                "Didn't get that!",
-                promptStyle: PromptStyle.Auto);
+            throw new NotImplementedException();
+        }
+        else if (messageLower.Contains("info"))
+        {
+            await context.Forward(
+                new InfoDialog(),
+                ResumeAfterInfoDialog,
+                message,
+                CancellationToken.None);
         }
         else
         {
-            await context.PostAsync($"{this.count++}: You said {message.Text}");
-            context.Wait(MessageReceivedAsync);
+            ShowOptions(context);
         }
     }
 
-    public async Task AfterResetAsync(
+    private void ShowOptions(IDialogContext context)
+        {
+            PromptDialog.Choice(
+                context,
+                OnOptionSelected,
+                new List<string>()
+                {
+                    BotAction.None,
+                    BotAction.PassTest,
+                    BotAction.DisplayInfo
+                },
+                "Please select an option",
+                "Not a valid option",
+                3);
+        }
+
+    private async Task ResumeAfterInfoDialog(
         IDialogContext context,
-        IAwaitable<bool> argument)
+        IAwaitable<object> result)
     {
-        var confirm = await argument;
-        if (confirm)
-        {
-            this.count = 1;
-            await context.PostAsync("Reset count.");
-        }
-        else
-        {
-            await context.PostAsync("Did not reset count.");
-        }
         context.Wait(MessageReceivedAsync);
+    }
+
+    private async Task OnOptionSelected(
+        IDialogContext context,
+        IAwaitable<string> result)
+    {
+        throw new NotImplementedException("OnOptionSelected");
+        // try
+        // {
+        //     string optionSelected = await result;
+        //     if (optionSelected == BotAction.None)
+        //     {
+        //         // Will it crash?
+        //         context.Done<object>(null);
+        //     }
+        //     else if (optionSelected == BotAction.PassTest)
+        //     {
+        //         var testRequestDialog = FormDialog.FromForm(
+        //             TestRequest.BuildForm,
+        //             FormOptions.PromptInStart);
+        //         context.Call(
+        //             testRequestDialog,
+        //             ResumeAfterTestRequestDialog);
+        //     }
+        //     else if (optionSelected == BotAction.DisplayInfo)
+        //     {
+        //         await context.PostAsync("Orthobullets Demo Bot. Hope you like it!");
+        //         context.Wait(MessageReceivedAsync);
+        //     }
+        //     else
+        //     {
+        //         throw new InvalidOperationException("Incorrect input.");
+        //     }
+        // }
+        // catch (TooManyAttemptsException ex)
+        // {
+        //     await context.PostAsync("Too many attemps. But please keep trying!");
+        //     context.Wait(MessageReceivedAsync);
+        // }
     }
 }
