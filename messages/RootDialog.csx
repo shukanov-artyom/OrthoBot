@@ -1,6 +1,10 @@
 #load "BotAction.csx"
 #load "TestRequest.csx"
 #load "InfoDialog.csx"
+#load "TestContent.csx"
+#load "TestContentFactory.csx"
+#load "PassTestDialog.csx"
+#load "TestResult.csx"
 
 using System;
 using System.Collections.Generic;
@@ -121,22 +125,29 @@ public class RootDialog : IDialog<object>
         IDialogContext context,
         IAwaitable<TestRequest> result)
     {
-        throw new NotImplementedException("TestRequest NotImplemented.");
-        // try
-        // {
-        //     TestRequest request = await result;
-        //     TestContent content = new TestContentFactory(request).Create();
-        //     var dialog = new PassTestDialog(content);
-        //     context.Call(dialog,
-        //         ResumeAfterTestPassed);
-        // }
-        // catch (Exception ex)
-        // {
-        //     await context.PostAsync($"Failed with message: {ex.Message}");
-        // }
-        // finally
-        // {
-        //     context.Wait(MessageReceivedAsync);
-        // }
+        try
+        {
+            TestRequest request = await result;
+            TestContent content = new TestContentFactory(request).Create();
+            var dialog = new PassTestDialog(content);
+            context.Call(dialog,
+                ResumeAfterTestPassed);
+        }
+        catch (Exception ex)
+        {
+            await context.PostAsync($"Failed with message: {ex.Message}");
+        }
+        finally
+        {
+            context.Wait(MessageReceivedAsync);
+        }
+    }
+
+    private async Task ResumeAfterTestPassed(
+        IDialogContext context,
+        IAwaitable<TestResult> result)
+    {
+        TestResult testResult = await result;
+        throw new NotImplementedException();
     }
 }
