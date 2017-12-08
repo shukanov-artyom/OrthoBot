@@ -44,7 +44,7 @@ public class RootDialog : IDialog<object>
         string messageLower = message.Text.ToLower();
         if (messageLower.Contains("test"))
         {
-            throw new NotImplementedException();
+            EnterTestRequestDialog(context);
         }
         else if (messageLower.Contains("info"))
         {
@@ -97,12 +97,7 @@ public class RootDialog : IDialog<object>
             }
             else if (optionSelected == BotAction.PassTest)
             {
-                var testRequestDialog = FormDialog.FromForm(
-                    TestRequest.BuildForm,
-                    FormOptions.PromptInStart);
-                context.Call(
-                    testRequestDialog,
-                    ResumeAfterTestRequestDialog);
+                EnterTestRequestDialog(context);
             }
             else if (optionSelected == BotAction.DisplayInfo)
             {
@@ -121,12 +116,23 @@ public class RootDialog : IDialog<object>
         }
     }
 
+    private void EnterTestRequestDialog(IDialogContext context)
+    {
+        var testRequestDialog = FormDialog.FromForm(
+            TestRequest.BuildForm,
+            FormOptions.PromptInStart);
+        context.Call(
+            testRequestDialog,
+            ResumeAfterTestRequestDialog);
+    }
+
     private async Task ResumeAfterTestRequestDialog(
         IDialogContext context,
         IAwaitable<TestRequest> result)
     {
         try
         {
+            await context.PostAsync("Starting test!");
             TestRequest request = await result;
             TestContent content = new TestContentFactory(request).Create();
             var dialog = new PassTestDialog(content);

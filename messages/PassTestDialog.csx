@@ -14,8 +14,9 @@ public class PassTestDialog : IDialog<TestResult>
         this.testContent = testContent;
     }
 
-    public Task StartAsync(IDialogContext context)
+    public async Task StartAsync(IDialogContext context)
     {
+        await context.PostAsync("Start test!");
         throw new NotImplementedException();
     }
 }
