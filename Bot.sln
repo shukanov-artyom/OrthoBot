@@ -26,10 +26,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "messages", "messages", "{F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA}"
 	ProjectSection(SolutionItems) = preProject
 		messages\function.json = messages\function.json
+		InfoDialog.csx = InfoDialog.csx
 		messages\project.json = messages\project.json
 		messages\project.lock.json = messages\project.lock.json
 		messages\RootDialog.csx = messages\RootDialog.csx
 		messages\run.csx = messages\run.csx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E1334B5B-A142-412D-B945-EE3EC58EF296}"
+	ProjectSection(SolutionItems) = preProject
+		BotAction.csx = BotAction.csx
 	EndProjectSection
 EndProject
 Global
@@ -50,6 +56,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA} = {36665A78-4D93-48C7-B432-4DA46AA140D5}
+		{E1334B5B-A142-412D-B945-EE3EC58EF296} = {F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA97BEA1-505C-427D-9A8B-81AE6BDED3B2}

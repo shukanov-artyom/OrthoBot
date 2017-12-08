@@ -1,3 +1,5 @@
+#load "BotAction.csx"
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -5,8 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.FormFlow;
-using MultiDialogsBot.Domain;
-using MultiDialogsBot.Domain.Content;
 
 [Serializable]
 public class RootDialog : IDialog<object>
@@ -32,7 +32,7 @@ public class RootDialog : IDialog<object>
 
     public virtual async Task MessageReceivedAsync(
         IDialogContext context,
-        IAwaitable<IMessageActivity> argument)
+        IAwaitable<IMessageActivity> result)
     {
         var message = await result;
         string messageLower = message.Text.ToLower();
