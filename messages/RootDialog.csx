@@ -1,4 +1,6 @@
 #load "BotAction.csx"
+#load "TestRequest.csx"
+#load "InfoDialog.csx"
 
 using System;
 using System.Collections.Generic;
@@ -81,37 +83,59 @@ public class RootDialog : IDialog<object>
         IDialogContext context,
         IAwaitable<string> result)
     {
-        throw new NotImplementedException("OnOptionSelected");
+        try
+        {
+            string optionSelected = await result;
+            if (optionSelected == BotAction.None)
+            {
+                // Will it crash?
+                context.Done<object>(null);
+            }
+            else if (optionSelected == BotAction.PassTest)
+            {
+                var testRequestDialog = FormDialog.FromForm(
+                    TestRequest.BuildForm,
+                    FormOptions.PromptInStart);
+                context.Call(
+                    testRequestDialog,
+                    ResumeAfterTestRequestDialog);
+            }
+            else if (optionSelected == BotAction.DisplayInfo)
+            {
+                await context.PostAsync("Orthobullets Demo Bot. Hope you like it!");
+                context.Wait(MessageReceivedAsync);
+            }
+            else
+            {
+                throw new InvalidOperationException("Incorrect input.");
+            }
+        }
+        catch (TooManyAttemptsException ex)
+        {
+            await context.PostAsync("Too many attemps. But please keep trying!");
+            context.Wait(MessageReceivedAsync);
+        }
+    }
+
+    private async Task ResumeAfterTestRequestDialog(
+        IDialogContext context,
+        IAwaitable<TestRequest> result)
+    {
+        throw new NotImplementedException("TestRequest NotImplemented.");
         // try
         // {
-        //     string optionSelected = await result;
-        //     if (optionSelected == BotAction.None)
-        //     {
-        //         // Will it crash?
-        //         context.Done<object>(null);
-        //     }
-        //     else if (optionSelected == BotAction.PassTest)
-        //     {
-        //         var testRequestDialog = FormDialog.FromForm(
-        //             TestRequest.BuildForm,
-        //             FormOptions.PromptInStart);
-        //         context.Call(
-        //             testRequestDialog,
-        //             ResumeAfterTestRequestDialog);
-        //     }
-        //     else if (optionSelected == BotAction.DisplayInfo)
-        //     {
-        //         await context.PostAsync("Orthobullets Demo Bot. Hope you like it!");
-        //         context.Wait(MessageReceivedAsync);
-        //     }
-        //     else
-        //     {
-        //         throw new InvalidOperationException("Incorrect input.");
-        //     }
+        //     TestRequest request = await result;
+        //     TestContent content = new TestContentFactory(request).Create();
+        //     var dialog = new PassTestDialog(content);
+        //     context.Call(dialog,
+        //         ResumeAfterTestPassed);
         // }
-        // catch (TooManyAttemptsException ex)
+        // catch (Exception ex)
         // {
-        //     await context.PostAsync("Too many attemps. But please keep trying!");
+        //     await context.PostAsync($"Failed with message: {ex.Message}");
+        // }
+        // finally
+        // {
         //     context.Wait(MessageReceivedAsync);
         // }
     }
