@@ -44,7 +44,7 @@ public enum TestingMode
 
 public enum SubspecialtyType
 {
-    All = -1,
+    All = 100,
 
     /// <summary>
     /// Trauma Orthopaedics subspecialty.

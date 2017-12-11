@@ -11,6 +11,6 @@ public class TestContentFactory
 
     public TestContent Create()
     {
-        throw new NotImplementedException();
+        return null;
     }
 }

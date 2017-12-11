@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Connector;
 
 [Serializable]
 public class RootDialog : IDialog<object>
@@ -93,7 +94,16 @@ public class RootDialog : IDialog<object>
             if (optionSelected == BotAction.None)
             {
                 // Will it crash?
-                context.Done<object>(null);
+                //context.Done<object>(null);
+
+                IMessageActivity message = context.MakeMessage();
+                message.Text = "I'm a message!";
+                message.Attachments.Add(new Attachment() 
+                {
+                    ContentType = "image/jpeg",
+                    ContentUrl = "http://upload.orthobullets.com/question/3670/images/mortons%20extension.jpg"
+                });
+                await context.PostAsync(message);
             }
             else if (optionSelected == BotAction.PassTest)
             {
@@ -133,11 +143,10 @@ public class RootDialog : IDialog<object>
         try
         {
             await context.PostAsync("Starting test!");
-            TestRequest request = await result;
-            TestContent content = new TestContentFactory(request).Create();
-            var dialog = new PassTestDialog(content);
-            context.Call(dialog,
-                ResumeAfterTestPassed);
+            //TestRequest request = await result;
+            //TestContent content = new TestContentFactory(request).Create();
+            var dialog = new PassTestDialog(/*content*/);
+            context.Call(dialog, ResumeAfterTestPassed);
         }
         catch (Exception ex)
         {
@@ -151,9 +160,10 @@ public class RootDialog : IDialog<object>
 
     private async Task ResumeAfterTestPassed(
         IDialogContext context,
-        IAwaitable<TestResult> result)
+        IAwaitable<object> result)
     {
-        TestResult testResult = await result;
-        throw new NotImplementedException();
+        //TestResult testResult = await result;
+        context.PostAsync("TestPassed!");
+        context.Wait(MessageReceivedAsync);
     }
 }

@@ -4,19 +4,27 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
 
-public class PassTestDialog : IDialog<TestResult>
+public class PassTestDialog : IDialog<object>
 {
-    private readonly TestContent testContent;
+    // private readonly TestContent testContent;
 
-    public PassTestDialog(TestContent testContent)
-    {
-        this.testContent = testContent;
-    }
+    // public PassTestDialog(TestContent testContent)
+    // {
+    //     this.testContent = testContent;
+    // }
 
     public async Task StartAsync(IDialogContext context)
     {
-        await context.PostAsync("Start test!");
-        throw new NotImplementedException();
+        context.Wait(WaitForMessage);
+    }
+
+    private async Task WaitForMessage(
+        IDialogContext context,
+        IAwaitable<object> result)
+    {
+        var message = await result;
+        context.Done<object>(null);
     }
 }
