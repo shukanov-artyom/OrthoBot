@@ -94,16 +94,8 @@ public class RootDialog : IDialog<object>
             if (optionSelected == BotAction.None)
             {
                 // Will it crash?
-                //context.Done<object>(null);
-
-                IMessageActivity message = context.MakeMessage();
-                message.Text = "I'm a message!";
-                message.Attachments.Add(new Attachment() 
-                {
-                    ContentType = "image/jpeg",
-                    ContentUrl = "http://upload.orthobullets.com/question/3670/images/mortons%20extension.jpg"
-                });
-                await context.PostAsync(message);
+                context.PostAsync("Ok, let me know if you need something.");
+                context.Wait(MessageReceivedAsync);
             }
             else if (optionSelected == BotAction.PassTest)
             {
@@ -142,10 +134,10 @@ public class RootDialog : IDialog<object>
     {
         try
         {
+            TestRequest request = await result;
+            TestContent content = new TestContentFactory(request).Create();
+            var dialog = new PassTestDialog(content);
             await context.PostAsync("Starting test!");
-            //TestRequest request = await result;
-            //TestContent content = new TestContentFactory(request).Create();
-            var dialog = new PassTestDialog(/*content*/);
             context.Call(dialog, ResumeAfterTestPassed);
         }
         catch (Exception ex)
@@ -163,7 +155,7 @@ public class RootDialog : IDialog<object>
         IAwaitable<object> result)
     {
         //TestResult testResult = await result;
-        context.PostAsync("TestPassed!");
+        await context.PostAsync("TestPassed!");
         context.Wait(MessageReceivedAsync);
     }
 }

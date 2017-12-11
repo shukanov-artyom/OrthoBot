@@ -1,12 +1,14 @@
 #load "TestQuestion.csx"
 
 using System.Collections.Generic;
+using System.Linq;
 
+[Serializable]
 public class TestContent
 {
-    public TestContent()
+    public TestContent(IEnumerable<TestQuestion> questions)
     {
-        Questions = new List<TestQuestion>();
+        Questions = questions.ToList();
     }
 
     public List<TestQuestion> Questions
