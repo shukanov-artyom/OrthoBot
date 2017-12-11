@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Connector;
 
 [Serializable]
 public class RootDialog : IDialog<object>
@@ -132,29 +131,18 @@ public class RootDialog : IDialog<object>
         IDialogContext context,
         IAwaitable<TestRequest> result)
     {
-        try
-        {
-            TestRequest request = await result;
-            TestContent content = new TestContentFactory(request).Create();
-            var dialog = new PassTestDialog(content);
-            await context.PostAsync("Starting test!");
-            context.Call(dialog, ResumeAfterTestPassed);
-        }
-        catch (Exception ex)
-        {
-            await context.PostAsync($"Failed with message: {ex.Message}");
-        }
-        finally
-        {
-            context.Wait(MessageReceivedAsync);
-        }
+        TestRequest request = await result;
+        TestContent content = new TestContentFactory(request).Create();
+        var dialog = new PassTestDialog(content);
+        await context.PostAsync("Starting test!");
+        context.Call(dialog, ResumeAfterTestPassed);
     }
 
     private async Task ResumeAfterTestPassed(
         IDialogContext context,
-        IAwaitable<object> result)
+        IAwaitable<TestResult> result)
     {
-        //TestResult testResult = await result;
+        var testResult = await result;
         await context.PostAsync("TestPassed!");
         context.Wait(MessageReceivedAsync);
     }

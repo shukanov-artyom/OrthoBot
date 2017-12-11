@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "Func", "%USERPROFILE%\AppData\Roaming\npm\node_modules\azure-functions-cli\bin\Func.exe", "{C3D4B696-69FC-43D3-9DE6-21FEF4184A2B}"
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "func", "C:\Users\Artyom_Shukanov\AppData\Roaming\npm\node_modules\azure-functions-cli\bin\func.exe", "{C3D4B696-69FC-43D3-9DE6-21FEF4184A2B}"
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
 		Executable = Func.exe
@@ -25,17 +25,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "messages", "messages", "{F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA}"
 	ProjectSection(SolutionItems) = preProject
+		messages\BotAction.csx = messages\BotAction.csx
 		messages\function.json = messages\function.json
-		InfoDialog.csx = InfoDialog.csx
+		messages\InfoDialog.csx = messages\InfoDialog.csx
+		messages\messages.csproj = messages\messages.csproj
+		messages\PassTestDialog.csx = messages\PassTestDialog.csx
 		messages\project.json = messages\project.json
 		messages\project.lock.json = messages\project.lock.json
 		messages\RootDialog.csx = messages\RootDialog.csx
 		messages\run.csx = messages\run.csx
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E1334B5B-A142-412D-B945-EE3EC58EF296}"
-	ProjectSection(SolutionItems) = preProject
-		BotAction.csx = BotAction.csx
+		messages\TestContent.csx = messages\TestContent.csx
+		messages\TestContentFactory.csx = messages\TestContentFactory.csx
+		messages\TestQuestion.csx = messages\TestQuestion.csx
+		messages\TestRequest.csx = messages\TestRequest.csx
+		messages\TestResult.csx = messages\TestResult.csx
 	EndProjectSection
 EndProject
 Global
@@ -56,7 +59,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA} = {36665A78-4D93-48C7-B432-4DA46AA140D5}
-		{E1334B5B-A142-412D-B945-EE3EC58EF296} = {F4D9DF3B-F4E4-4E19-9053-3AF71A3189FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA97BEA1-505C-427D-9A8B-81AE6BDED3B2}
