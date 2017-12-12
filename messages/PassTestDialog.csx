@@ -32,6 +32,7 @@ public class PassTestDialog : IDialog<TestResult>
 
     private async Task DisplayCurrentQuestionAsync(IDialogContext context)
     {
+        await context.PostAsync($"Question {currentQuestionNumber + 1}");
         var question = testContent.Questions[currentQuestionNumber];
         IMessageActivity message = context.MakeMessage();
         message.Text = question.Text;
@@ -51,7 +52,6 @@ public class PassTestDialog : IDialog<TestResult>
         foreach (var option in question.Answers)
         {
             options.Add(option.Value);
-            //optionsTextBuilder.AppendLine($"{option.Key}. {option.Value}\r\n");
         }
         string optionsTotalText = optionsTextBuilder.ToString();
         messageOptions.Text = optionsTotalText;
@@ -69,21 +69,31 @@ public class PassTestDialog : IDialog<TestResult>
         IDialogContext context,
         IAwaitable<string> result)
     {
+        var question = testContent.Questions[currentQuestionNumber];
         string answer = await result;
-        int answerInt;
-        if (!Int32.TryParse(answer, out answerInt))
+        int answerNumber;
+        bool hasTextualAnswer = question.Answers.Any(a => a.Value == answer);
+        if (Int32.TryParse(answer, out answerNumber) || hasTextualAnswer)
         {
-            await context.PostAsync("This does not look like an answer number, please try again.");
-        }
-        questionsAndAnswers[currentQuestionNumber] = answerInt;
-        if (currentQuestionNumber == testContent.Questions.Count - 1)
-        {
-            context.Done<TestResult>(new TestResult(testContent, questionsAndAnswers));
+            if (hasTextualAnswer)
+            {
+                answerNumber = question.Answers.First(a => a.Value == answer).Key;
+            }
+            questionsAndAnswers[currentQuestionNumber] = answerNumber;
+            if (currentQuestionNumber == testContent.Questions.Count - 1)
+            {
+                context.Done<TestResult>(new TestResult(testContent, questionsAndAnswers));
+            }
+            else
+            {
+                currentQuestionNumber++;
+                await DisplayCurrentQuestionAsync(context);
+            }
         }
         else
         {
-            currentQuestionNumber++;
-            await DisplayCurrentQuestionAsync(context);
+            await context.PostAsync("This is not an answer, please try again.");
+            context.Wait<string>(WaitForAnswerOnCurrentQuestion);
         }
     }
 }
