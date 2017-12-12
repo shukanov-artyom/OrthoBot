@@ -33,6 +33,7 @@ public class PassTestDialog : IDialog<TestResult>
     {
         await context.PostAsync($"Question {currentQuestionNumber + 1}");
         var question = testContent.Questions[currentQuestionNumber];
+        // Display question and attaches
         IMessageActivity message = context.MakeMessage();
         message.Text = question.Text;
         foreach (var attachment in question.AttachedImages)
@@ -45,13 +46,13 @@ public class PassTestDialog : IDialog<TestResult>
             });
         }
         await context.PostAsync(message);
+        // Display Answer Options
         IMessageActivity messageOptions = context.MakeMessage();
         var options = new List<string>();
         foreach (var option in question.Answers)
         {
             options.Add(option.Value);
         }
-        await context.PostAsync(messageOptions);
         PromptDialog.Choice(
             context,
             WaitForAnswerOnCurrentQuestion,
