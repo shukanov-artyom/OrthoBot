@@ -57,7 +57,7 @@ public class PassTestDialog : IDialog<TestResult>
             context,
             WaitForAnswerOnCurrentQuestion,
             options,
-            "Please select an option",
+            "Please select an answer",
             "Not a valid option",
             3);
     }
