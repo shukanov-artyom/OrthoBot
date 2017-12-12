@@ -2,9 +2,11 @@
 #load "TestContent.csx"
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Builder.FormFlow;
 
 [Serializable]
 public class PassTestDialog : IDialog<TestResult>
@@ -24,6 +26,12 @@ public class PassTestDialog : IDialog<TestResult>
 
     public async Task StartAsync(IDialogContext context)
     {
+        await DisplayCurrentQuestionAsync(context);
+        //context.Wait<string>(WaitForAnswerOnCurrentQuestion);
+    }
+
+    private async Task DisplayCurrentQuestionAsync(IDialogContext context)
+    {
         var question = testContent.Questions[currentQuestionNumber];
         IMessageActivity message = context.MakeMessage();
         message.Text = question.Text;
@@ -37,19 +45,35 @@ public class PassTestDialog : IDialog<TestResult>
             });
         }
         await context.PostAsync(message);
-        context.Wait(WaitForAnswerOnCurrentQuestion);
+        IMessageActivity messageOptions = context.MakeMessage();
+        StringBuilder optionsTextBuilder = new StringBuilder();
+        var options = new List<string>();
+        foreach (var option in question.Answers)
+        {
+            options.Add(option.Value);
+            //optionsTextBuilder.AppendLine($"{option.Key}. {option.Value}\r\n");
+        }
+        string optionsTotalText = optionsTextBuilder.ToString();
+        messageOptions.Text = optionsTotalText;
+        await context.PostAsync(messageOptions);
+        PromptDialog.Choice(
+            context,
+            WaitForAnswerOnCurrentQuestion,
+            options,
+            "Please select an option",
+            "Not a valid option",
+            3);
     }
 
     private async Task WaitForAnswerOnCurrentQuestion(
         IDialogContext context,
-        IAwaitable<IMessageActivity> result)
+        IAwaitable<string> result)
     {
-        IMessageActivity questionAnswer = await result;
+        string answer = await result;
         int answerInt;
-        if (!Int32.TryParse(questionAnswer.Text, out answerInt))
+        if (!Int32.TryParse(answer, out answerInt))
         {
-            context.PostAsync("This does not look like an answer number, please try again.");
-            context.Wait(WaitForAnswerOnCurrentQuestion);
+            await context.PostAsync("This does not look like an answer number, please try again.");
         }
         questionsAndAnswers[currentQuestionNumber] = answerInt;
         if (currentQuestionNumber == testContent.Questions.Count - 1)
@@ -59,20 +83,7 @@ public class PassTestDialog : IDialog<TestResult>
         else
         {
             currentQuestionNumber++;
-            var question = testContent.Questions[currentQuestionNumber];
-            IMessageActivity message = context.MakeMessage();
-            message.Text = question.Text;
-            foreach (var attachment in question.AttachedImages)
-            {
-                message.Attachments.Add(
-                new Attachment()
-                {
-                    ContentType = "image/jpeg",
-                    ContentUrl = attachment
-                });
-            }
-            await context.PostAsync(message);
-            context.Wait(WaitForAnswerOnCurrentQuestion);
+            await DisplayCurrentQuestionAsync(context);
         }
     }
 }

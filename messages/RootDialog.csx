@@ -93,7 +93,7 @@ public class RootDialog : IDialog<object>
             if (optionSelected == BotAction.None)
             {
                 // Will it crash?
-                context.PostAsync("Ok, let me know if you need something.");
+                await context.PostAsync("Ok, let me know if you need something.");
                 context.Wait(MessageReceivedAsync);
             }
             else if (optionSelected == BotAction.PassTest)

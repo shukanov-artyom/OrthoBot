@@ -22,14 +22,17 @@ public class TestContentFactory
     {
         // 1004
         // TODO 
-        
+
         // 3670
         var q1004 =  new TestQuestion(
             "Which of the following foot conditions is most appropriately treated with the orthotic shown in Figure A?",
             new Dictionary<int, string>()
             {
-                {1, "Hallux rigidus"},
-
+                { 1, "Hallux rigidus" },
+                { 2, "Hallux valgus" },
+                { 3, "Midfoot arthritis" },
+                { 4, "Freiberg Infraction" },
+                { 5, @"Interdigital neuroma (Morton's)" } 
             },
             1);
         q1004.AttachedImages.Add("http://upload.orthobullets.com/question/3670/images/mortons%20extension.jpg");
