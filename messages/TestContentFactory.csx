@@ -50,5 +50,28 @@ public class TestContentFactory
         q3670.AttachedImages.Add("http://upload.orthobullets.com/question/3670/images/mortons%20extension.jpg");
         q3670.AttachedImages.Add("http://upload.orthobullets.com/question/3670/images/hallux%20rigidus%20xr.jpg");
         yield return q3670;
+
+        // 4504
+        var q4504 = new TestQuestion(
+            "Skeletal maturity is an important variable in the progression of idiopathic scoliosis. Figures A-E are radiographs showing varying stages of skeletal maturity.  The patient represented by which Figure would be expected to have the highest risk of progression of an idiopathic scoliotic curve?",
+            new Dictionary<int, string>() 
+                {
+                    { 1, "A" },
+                    { 2, "B" },
+                    { 3, "C" },
+                    { 4, "D" },
+                    { 5, "E" } 
+                },
+            3);
+        q4504.AttachedImages.Add("http://upload.orthobullets.com/question/4504/images/screen+shot+2013-11-25+at+8.21.20+pm.jpg");
+        q4504.AttachedImages.Add("http://upload.orthobullets.com/question/4504/images/screen+shot+2013-11-25+at+8.19.39+pm.jpg");
+        q4504.AttachedImages.Add("http://upload.orthobullets.com/question/4504/images/screen+shot+2013-11-25+at+8.20.33+pm.jpg");
+        q4504.AttachedImages.Add("http://upload.orthobullets.com/question/4504/images/screen+shot+2013-11-25+at+7.53.06+pm.jpg");
+        q4504.AttachedImages.Add("http://upload.orthobullets.com/question/4504/images/screen+shot+2013-11-03+at+8.40.23+am.jpg");
+
+        // 3116
+        // 4410
+        // 3589
+        
     }
 }

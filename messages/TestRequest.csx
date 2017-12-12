@@ -5,6 +5,7 @@ using Microsoft.Bot.Builder.FormFlow;
 [Serializable]
 public class TestRequest
 {
+    [Numeric(1, 10)]
     public int QuestionsCount { get; set; }
 
     public List<SubspecialtyType> Subspecialties { get; set; }
