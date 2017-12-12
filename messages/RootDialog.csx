@@ -143,7 +143,7 @@ public class RootDialog : IDialog<object>
         IAwaitable<TestResult> result)
     {
         var testResult = await result;
-        await context.PostAsync("TestPassed!");
+        await context.PostAsync($"Test passed! Your result: {testResult.Ratio}");
         context.Wait(MessageReceivedAsync);
     }
 }

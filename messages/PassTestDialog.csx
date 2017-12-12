@@ -27,7 +27,6 @@ public class PassTestDialog : IDialog<TestResult>
     public async Task StartAsync(IDialogContext context)
     {
         await DisplayCurrentQuestionAsync(context);
-        //context.Wait<string>(WaitForAnswerOnCurrentQuestion);
     }
 
     private async Task DisplayCurrentQuestionAsync(IDialogContext context)
@@ -47,14 +46,11 @@ public class PassTestDialog : IDialog<TestResult>
         }
         await context.PostAsync(message);
         IMessageActivity messageOptions = context.MakeMessage();
-        StringBuilder optionsTextBuilder = new StringBuilder();
         var options = new List<string>();
         foreach (var option in question.Answers)
         {
             options.Add(option.Value);
         }
-        string optionsTotalText = optionsTextBuilder.ToString();
-        messageOptions.Text = optionsTotalText;
         await context.PostAsync(messageOptions);
         PromptDialog.Choice(
             context,
@@ -82,6 +78,7 @@ public class PassTestDialog : IDialog<TestResult>
             questionsAndAnswers[currentQuestionNumber] = answerNumber;
             if (currentQuestionNumber == testContent.Questions.Count - 1)
             {
+                // Done with test!
                 context.Done<TestResult>(new TestResult(testContent, questionsAndAnswers));
             }
             else
