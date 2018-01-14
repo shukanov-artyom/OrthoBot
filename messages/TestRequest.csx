@@ -20,7 +20,7 @@ public class TestRequest
     public static IForm<TestRequest> BuildForm()
     {
         return new FormBuilder<TestRequest>()
-            .Message("Which test would you like to pass?")
+            .Message("Let's compose a test.")
             .Build();
     }
 }
